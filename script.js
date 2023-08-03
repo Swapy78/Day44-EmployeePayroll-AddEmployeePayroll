@@ -61,10 +61,10 @@ class EmployeePayroll {
   }
 
   set salary(salary) {
-    if (salary > 0) {
+    if (salary >= 30000 && salary <= 50000) { // Ensure salary is within the range
       this._salary = salary;
     } else {
-      throw 'Salary should be greater than 0!';
+      throw 'Salary should be between 30000 and 50000!';
     }
   }
 
@@ -152,6 +152,28 @@ function resetUI() {
   document.getElementById('nameError').textContent = '';
   document.getElementById('dateError').textContent = '';
 }
+
+function resetForm() {
+  document.getElementById('name').value = '';
+  const profileRadios = document.querySelectorAll('input[name="profile"]');
+  profileRadios.forEach(radio => (radio.checked = false));
+  const genderRadios = document.querySelectorAll('input[name="gender"]');
+  genderRadios.forEach(radio => (radio.checked = false));
+  const departmentCheckboxes = document.querySelectorAll('input[name="department"]');
+  departmentCheckboxes.forEach(checkbox => (checkbox.checked = false));
+  document.getElementById('salary').value = 40000;
+  updateSalaryValue();
+  const currentDate = new Date();
+  const currentYear = currentDate.getFullYear();
+  const currentMonth = currentDate.getMonth() + 1;
+  const currentDay = currentDate.getDate();
+  document.getElementById('day').value = currentDay;
+  document.getElementById('month').value = currentMonth;
+  document.getElementById('year').value = currentYear;
+  document.getElementById('notes').value = '';
+  resetUI();
+}
+
 function save() {
   resetUI();
   try {
@@ -203,7 +225,8 @@ function save() {
   }
 }
 
-saveToLocalStorage(employeePayroll); // Save the EmployeePayroll object to Local Storage
+//saveToLocalStorage(employeePayroll); // Save the EmployeePayroll object to Local Storage
+
 function initializeForm() {
   const currentDate = new Date();
   const currentYear = currentDate.getFullYear();
@@ -214,16 +237,22 @@ function initializeForm() {
   populateSelectOptions('month');
   populateSelectOptions('year', currentYear, currentYear - 100);
 
-  const form = document.querySelector('.form');
-  form.addEventListener('submit', (event) => {
-    event.preventDefault();
-    save();
-  });
-
   const salaryRange = document.getElementById('salary');
   const salaryValueOutput = document.getElementById('salaryValue');
   salaryRange.addEventListener('input', updateSalaryValue);
   salaryValueOutput.textContent = salaryRange.value;
 }
+
+ 
+
+      const form = document.querySelector('.form');
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    save();
+  });
+
+
+const resetButton = document.getElementById('resetButton');
+resetButton.addEventListener('click', resetForm);
 
 document.addEventListener('DOMContentLoaded', initializeForm);

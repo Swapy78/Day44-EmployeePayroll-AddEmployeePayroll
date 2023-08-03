@@ -37,22 +37,22 @@
     <div class="profile-radio-content">
       <label>
         <input type="radio" id="profile1" name="profile"
-               value="C:\Users\Admin\Desktop\HTML & CSS\FS HTML_CSS LP02 Employee Payroll App Assets\assets\profile-images\Ellipse -3" required>
-        <img class="profile" id='image1' src="C:\Users\Admin\Desktop\HTML & CSS\FS HTML_CSS LP02 Employee Payroll App Assets\assets\profile-images\Ellipse -3" </label>
+               value="C:\Users\Admin\Desktop\HTML & CSS\FS HTML_CSS LP02 Employee Payroll App Assets\assets\profile-images\Ellipse -3.png" required>
+        <img class="profile" id='image1' src="C:\Users\Admin\Desktop\HTML & CSS\FS HTML_CSS LP02 Employee Payroll App Assets\assets\profile-images\Ellipse -3.png" </label>
       <label>
         <input type="radio" id="profile2" name="profile"
-               value="C:\Users\Admin\Desktop\HTML & CSS\FS HTML_CSS LP02 Employee Payroll App Assets\assets\profile-images\Ellipse -3" required>
-        <img class="profile" id='image2' src="C:\Users\Admin\Desktop\HTML & CSS\FS HTML_CSS LP02 Employee Payroll App Assets\assets\profile-images\Ellipse -1"
+               value="C:\Users\Admin\Desktop\HTML & CSS\FS HTML_CSS LP02 Employee Payroll App Assets\assets\profile-images\Ellipse -1.png" required>
+        <img class="profile" id='image2' src="C:\Users\Admin\Desktop\HTML & CSS\FS HTML_CSS LP02 Employee Payroll App Assets\assets\profile-images\Ellipse -1.png"
       </label>
       <label>
         <input type="radio" id="profile3" name="profile"
-               value="C:\Users\Admin\Desktop\HTML & CSS\FS HTML_CSS LP02 Employee Payroll App Assets\assets\profile-images\Ellipse -3" required>
-        <img class="profile" id='image3' src="C:\Users\Admin\Desktop\HTML & CSS\FS HTML_CSS LP02 Employee Payroll App Assets\assets\profile-images\Ellipse -8"
+               value="C:\Users\Admin\Desktop\HTML & CSS\FS HTML_CSS LP02 Employee Payroll App Assets\assets\profile-images\Ellipse -8.png" required>
+        <img class="profile" id='image3' src="C:\Users\Admin\Desktop\HTML & CSS\FS HTML_CSS LP02 Employee Payroll App Assets\assets\profile-images\Ellipse -8.png"
       </label>
       <label>
         <input type="radio" id="profile4" name="profile"
-               value="C:\Users\Admin\Desktop\HTML & CSS\FS HTML_CSS LP02 Employee Payroll App Assets\assets\profile-images\Ellipse -3" required>
-        <img class="profile" id='image4' src="C:\Users\Admin\Desktop\HTML & CSS\FS HTML_CSS LP02 Employee Payroll App Assets\assets\profile-images\Ellipse -7"
+               value="C:\Users\Admin\Desktop\HTML & CSS\FS HTML_CSS LP02 Employee Payroll App Assets\assets\profile-images\Ellipse -7.png" required>
+        <img class="profile" id='image4' src="C:\Users\Admin\Desktop\HTML & CSS\FS HTML_CSS LP02 Employee Payroll App Assets\assets\profile-images\Ellipse -7.png"
       </label>
 
     </div>
@@ -86,6 +86,7 @@
     <input class="input" type="range" name="salary" id="salary" min="30000" max="50000" step="100" value="40000">
     <output class="salary-output text" for="salary" id="salaryValue">40000</output>
   </div>
+
   <div class="row-content">
     <label class="label text" for="startDate">Start Date</label>
     <div>
@@ -159,17 +160,23 @@
     <a href="./home.html" class="resetButton button cancelButton">Cancel</a>
     <div class="submit-reset">
       <button type="submit" class="button submitButton" id="submitButton" onclick="save()">Submit</button>
-      <button type="reset" class="resetButton button">Reset</button>
+      <button type="reset" class="resetButton button" id="resetButton" onclick="resetForm()">Reset</button>
     </div>
   </div>
 </form>
 </div>
 
-<button type="submit">Save</button>
-
 
 </div>
+</form>
+</div>
+
+
+<button type="submit">Save</button>
+
+<script src="script.js" defer></script>
+
 
 </body>
-<script src="script.js" defer></script>
+
 </html>
