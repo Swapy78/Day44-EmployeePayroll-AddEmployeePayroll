@@ -102,6 +102,8 @@ class EmployeePayroll {
     const empDate = !this.startDate ? 'undefined' : this.startDate.toLocaleDateString('en-US', options);
     return `id: ${this.id}, Name: ${this.name}, Profile: ${this.profile}, Gender: ${this.gender}, Department: ${this.department}, Salary: ${this.salary}, Start Date: ${empDate}, Notes: ${this.notes}`;
   }
+  // Function to save EmployeePayroll object to Local Storage
+
 }
 
 function populateSelectOptions(selectId, startValue, endValue) {
@@ -150,7 +152,6 @@ function resetUI() {
   document.getElementById('nameError').textContent = '';
   document.getElementById('dateError').textContent = '';
 }
-
 function save() {
   resetUI();
   try {
@@ -187,6 +188,9 @@ function save() {
 
     console.log(employeePayroll.toString());
 
+    // Save the EmployeePayroll object to Local Storage
+    saveToLocalStorage(employeePayroll);
+
     alert('Employee Payroll saved successfully!');
   } catch (error) {
     if (error === 'Name is incorrect! Name must start with a capital letter and have a minimum of 3 characters.') {
@@ -199,6 +203,7 @@ function save() {
   }
 }
 
+saveToLocalStorage(employeePayroll); // Save the EmployeePayroll object to Local Storage
 function initializeForm() {
   const currentDate = new Date();
   const currentYear = currentDate.getFullYear();
