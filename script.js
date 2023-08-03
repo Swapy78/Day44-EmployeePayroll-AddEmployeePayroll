@@ -65,6 +65,8 @@ class EmployeePayroll {
   set salary(salary) {
     if (salary > 0) {
       this._salary = salary;
+      // Update the displayed salary value
+      updateSalaryValue();
     } else {
       throw 'Salary should be greater than 0!';
     }
@@ -130,3 +132,82 @@ function save() {
     alert(error);
   }
 }
+function updateSalaryValue() {
+  const salaryRange = document.getElementById('salary');
+  const salaryValueOutput = document.getElementById('salaryValue');
+  salaryValueOutput.innerText = salaryRange.value;
+}
+
+// Function to validate name
+function validateName(name) {
+  const nameRegex = /^[A-Z]{1}[a-zA-Z\s]{2,}$/;
+  if (nameRegex.test(name)) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+// Function to validate start date
+function validateStartDate(startDate) {
+  const now = new Date();
+  const joiningDate = new Date(startDate);
+  const thirtyDaysAgo = new Date(now.setDate(now.getDate() - 30));
+
+  if (joiningDate > now) {
+    return false;
+  } else if (joiningDate < thirtyDaysAgo) {
+    return false;
+  } else {
+    return true;
+  }
+}
+
+// Event listener when the document is loaded
+document.addEventListener('DOMContentLoaded', () => {
+  // Event listener for the salary range input
+  const salaryRange = document.getElementById('salary');
+  const salaryValueOutput = document.getElementById('salaryValue');
+  salaryRange.addEventListener('input', updateSalaryValue);
+
+   // Event listener for form submission
+   const form = document.querySelector('form');
+   form.addEventListener('submit', (event) => {
+     event.preventDefault();
+    // Get form data and create EmployeePayroll object
+    const employeePayroll = new EmployeePayroll();
+    try {
+      const name = document.getElementById('name').value;
+      if (validateName(name)) {
+        employeePayroll.name = name;
+      } else {
+        throw 'Name is incorrect! Name must start with a capital letter and have a minimum of 3 characters.';
+      }
+      employeePayroll.profile = document.querySelector('input[name="profile"]:checked').value;
+      employeePayroll.gender = document.querySelector('input[name="gender"]:checked').value;
+      const departmentCheckboxes = document.querySelectorAll('input[name="department"]:checked');
+      const departmentArray = [];
+      departmentCheckboxes.forEach(checkbox => departmentArray.push(checkbox.value));
+      employeePayroll.department = departmentArray;
+
+      const salary = document.getElementById('salary').value;
+      employeePayroll.salary = salary;
+
+      const startDate = document.getElementById('day').value + '-' + document.getElementById('month').value + '-' + document.getElementById('year').value;
+      if (validateStartDate(startDate)) {
+        employeePayroll.startDate = startDate;
+      } else {
+        throw "Invalid start date. Start Date cannot be a future date and should be within 30 days of joining.";
+      }
+
+      employeePayroll.notes = document.getElementById('notes').value;
+
+      // Display the EmployeePayroll object details
+      console.log(employeePayroll.toString());
+
+      // Perform any further actions, like saving the object to the database, etc.
+    } catch (error) {
+      alert(error);
+    }
+  });
+});
