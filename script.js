@@ -1,38 +1,36 @@
-// script.js
 
 // Employee Payroll Data Object
 class EmployeePayroll {
   constructor() {
     this._id = ' ';
     this._name = '';
-    this._profile = '';
-    this._gender = '';
-    this._department = [];
-    this._salary = 0;
-    this._startDate = null;
-    this._notes = '';
+    this.profile = '';
+    this.gender = '';
+    this.department = [];
+    this.salary = 0;
+    this.startDate = null;
+    this.notes = '';
   }
 
-  // Getter and Setter methods
   get id() {
     return this._id;
   }
   set id(id) {
     this._id = id;
   }
+
   get name() {
     return this._name;
   }
 
   set name(name) {
-      let nameRegex = RegExp('^[A-Z]{1}[a-zA-Z\\s]{2,}$');
-      if (nameRegex.test(name)) {
-        this._name = name;
-      } else {
-        throw 'Name is incorrect! Name must start with a capital letter and have a minimum of 3 characters.';
-      }
+    const nameRegex = /^[A-Z]{1}[a-zA-Z\s]{2,}$/;
+    if (nameRegex.test(name)) {
+      this._name = name;
+    } else {
+      throw 'Name is incorrect! Name must start with a capital letter and have a minimum of 3 characters.';
     }
-  
+  }
 
   get profile() {
     return this._profile;
@@ -65,8 +63,6 @@ class EmployeePayroll {
   set salary(salary) {
     if (salary > 0) {
       this._salary = salary;
-      // Update the displayed salary value
-      updateSalaryValue();
     } else {
       throw 'Salary should be greater than 0!';
     }
@@ -77,18 +73,18 @@ class EmployeePayroll {
   }
 
   set startDate(startDate) {
-      let now = new Date();
-      let joiningDate = new Date(startDate);
-      let thirtyDaysAgo = new Date(now.setDate(now.getDate() - 30));
+    let now = new Date();
+    let joiningDate = new Date(startDate);
+    let thirtyDaysAgo = new Date(now.setDate(now.getDate() - 30));
 
-      if (joiningDate > now) {
-          throw "Start Date cannot be a future date.";
-        } else if (joiningDate < thirtyDaysAgo) {
-          throw "Start Date should be within 30 days of joining.";
-        } else {
-          this._startDate = startDate;
-        }
-      }
+    if (joiningDate > now) {
+      throw "Start Date cannot be a future date.";
+    } else if (joiningDate < thirtyDaysAgo) {
+      throw "Start Date should be within 30 days of joining.";
+    } else {
+      this._startDate = startDate;
+    }
+  }
 
   get notes() {
     return this._notes;
@@ -102,112 +98,127 @@ class EmployeePayroll {
 
   // To String method for printing EmployeePayroll object
   toString() {
-    const options = {year: 'numeric', month: 'long', day: 'numeric'};
-    const empDate = !this.startDate ? "undefined" :
-                    this.startDate.toLocalDateString("en-US", Options);
-    return `id: ${this.id}, Name: ${this.name}, Profile: ${this.profile}, Gender: ${this.gender}, Department: ${this.department}, Salary: ${this.salary}, Start Date: ${this.startDate}, Notes: ${this.notes}`;
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    const empDate = !this.startDate ? 'undefined' : this.startDate.toLocaleDateString('en-US', options);
+    return `id: ${this.id}, Name: ${this.name}, Profile: ${this.profile}, Gender: ${this.gender}, Department: ${this.department}, Salary: ${this.salary}, Start Date: ${empDate}, Notes: ${this.notes}`;
   }
 }
 
-// Function to save data on form submit
+function populateSelectOptions(selectId, startValue, endValue) {
+  const selectElement = document.getElementById(selectId);
+  for (let i = startValue; i <= endValue; i++) {
+    const option = document.createElement('option');
+    option.value = i;
+    option.textContent = i;
+    selectElement.appendChild(option);
+  }
+}
+
+function getCurrentDateAsString() {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+function validateName(name) {
+  const nameRegex = /^[A-Z]{1}[a-zA-Z\s]{2,}$/;
+  return nameRegex.test(name);
+}
+
+function validateStartDate(startDate) {
+  const now = new Date();
+  const joiningDate = new Date(startDate);
+
+  now.setHours(0, 0, 0, 0);
+  joiningDate.setHours(0, 0, 0, 0);
+
+  const thirtyDaysAgo = new Date(now);
+  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+  return joiningDate <= now && joiningDate >= thirtyDaysAgo;
+}
+
+function updateSalaryValue() {
+  const salaryRange = document.getElementById('salary');
+  const salaryValueOutput = document.getElementById('salaryValue');
+  salaryValueOutput.textContent = salaryRange.value;
+}
+
+function resetUI() {
+  document.getElementById('nameError').textContent = '';
+  document.getElementById('dateError').textContent = '';
+}
+
 function save() {
-  // Get form data and create EmployeePayroll object
-  const employeePayroll = new EmployeePayroll();
+  resetUI();
   try {
+    const employeePayroll = new EmployeePayroll();
     employeePayroll.name = document.getElementById('name').value;
     employeePayroll.profile = document.querySelector('input[name="profile"]:checked').value;
     employeePayroll.gender = document.querySelector('input[name="gender"]:checked').value;
     const departmentCheckboxes = document.querySelectorAll('input[name="department"]:checked');
-    const departmentArray = [];
-    departmentCheckboxes.forEach(checkbox => departmentArray.push(checkbox.value));
-    employeePayroll.department = departmentArray;
-    employeePayroll.salary = document.getElementById('salary').value;
-    // You can add additional fields here and set them in the EmployeePayroll object
+    employeePayroll.department = Array.from(departmentCheckboxes).map(checkbox => checkbox.value);
+    employeePayroll.salary = parseFloat(document.getElementById('salary').value);
 
-    // Display the EmployeePayroll object details
+    const day = document.getElementById('day').value;
+    const month = document.getElementById('month').value;
+    const year = document.getElementById('year').value;
+    const startDateString = `${year}-${month}-${day}`;
+
+    if (!validateName(employeePayroll.name)) {
+      throw 'Name is incorrect! Name must start with a capital letter and have a minimum of 3 characters.';
+    }
+
+    const currentDate = getCurrentDateAsString();
+    if (startDateString > currentDate) {
+      throw "Start Date cannot be a future date.";
+    }
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    const thirtyDaysAgoString = thirtyDaysAgo.toISOString().split('T')[0];
+    if (startDateString < thirtyDaysAgoString) {
+      throw "Start Date should be within 30 days of joining.";
+    }
+
+    employeePayroll.startDate = startDateString;
+    employeePayroll.notes = document.getElementById('notes').value;
+
     console.log(employeePayroll.toString());
 
-    // Perform any further actions, like saving the object to the database, etc.
+    alert('Employee Payroll saved successfully!');
   } catch (error) {
-    alert(error);
-  }
-}
-function updateSalaryValue() {
-  const salaryRange = document.getElementById('salary');
-  const salaryValueOutput = document.getElementById('salaryValue');
-  salaryValueOutput.innerText = salaryRange.value;
-}
-
-// Function to validate name
-function validateName(name) {
-  const nameRegex = /^[A-Z]{1}[a-zA-Z\s]{2,}$/;
-  if (nameRegex.test(name)) {
-    return true;
-  } else {
-    return false;
+    if (error === 'Name is incorrect! Name must start with a capital letter and have a minimum of 3 characters.') {
+      document.getElementById('nameError').textContent = error;
+    } else if (error === "Start Date cannot be a future date." || error === "Start Date should be within 30 days of joining.") {
+      document.getElementById('dateError').textContent = error;
+    } else {
+      alert(error);
+    }
   }
 }
 
-// Function to validate start date
-function validateStartDate(startDate) {
-  const now = new Date();
-  const joiningDate = new Date(startDate);
-  const thirtyDaysAgo = new Date(now.setDate(now.getDate() - 30));
+function initializeForm() {
+  const currentDate = new Date();
+  const currentYear = currentDate.getFullYear();
+  const currentMonth = currentDate.getMonth() + 1;
+  const currentDay = currentDate.getDate();
 
-  if (joiningDate > now) {
-    return false;
-  } else if (joiningDate < thirtyDaysAgo) {
-    return false;
-  } else {
-    return true;
-  }
-}
+  populateSelectOptions('day', 1, 31);
+  populateSelectOptions('month');
+  populateSelectOptions('year', currentYear, currentYear - 100);
 
-// Event listener when the document is loaded
-document.addEventListener('DOMContentLoaded', () => {
-  // Event listener for the salary range input
+  const form = document.querySelector('.form');
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    save();
+  });
+
   const salaryRange = document.getElementById('salary');
   const salaryValueOutput = document.getElementById('salaryValue');
   salaryRange.addEventListener('input', updateSalaryValue);
+  salaryValueOutput.textContent = salaryRange.value;
+}
 
-   // Event listener for form submission
-   const form = document.querySelector('form');
-   form.addEventListener('submit', (event) => {
-     event.preventDefault();
-    // Get form data and create EmployeePayroll object
-    const employeePayroll = new EmployeePayroll();
-    try {
-      const name = document.getElementById('name').value;
-      if (validateName(name)) {
-        employeePayroll.name = name;
-      } else {
-        throw 'Name is incorrect! Name must start with a capital letter and have a minimum of 3 characters.';
-      }
-      employeePayroll.profile = document.querySelector('input[name="profile"]:checked').value;
-      employeePayroll.gender = document.querySelector('input[name="gender"]:checked').value;
-      const departmentCheckboxes = document.querySelectorAll('input[name="department"]:checked');
-      const departmentArray = [];
-      departmentCheckboxes.forEach(checkbox => departmentArray.push(checkbox.value));
-      employeePayroll.department = departmentArray;
-
-      const salary = document.getElementById('salary').value;
-      employeePayroll.salary = salary;
-
-      const startDate = document.getElementById('day').value + '-' + document.getElementById('month').value + '-' + document.getElementById('year').value;
-      if (validateStartDate(startDate)) {
-        employeePayroll.startDate = startDate;
-      } else {
-        throw "Invalid start date. Start Date cannot be a future date and should be within 30 days of joining.";
-      }
-
-      employeePayroll.notes = document.getElementById('notes').value;
-
-      // Display the EmployeePayroll object details
-      console.log(employeePayroll.toString());
-
-      // Perform any further actions, like saving the object to the database, etc.
-    } catch (error) {
-      alert(error);
-    }
-  });
-});
+document.addEventListener('DOMContentLoaded', initializeForm);
